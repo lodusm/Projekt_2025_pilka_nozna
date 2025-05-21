@@ -1,29 +1,28 @@
 import pandas as pd
 
 #Funkcja do zmieniania pełnych nazwisk na ksywki (Lionel Andreas Messi Cuccitini > Lionel Messi)
-def apply_nicknames(events, lineups):
+def apply_nicknames(events, lineups, starting_events=None):
 
-    #Słownik id : nickname
+    if starting_events is None:
+        starting_events = events[events['type'] == 'Starting XI'].copy()
+
     nickname_dict = {
         row['player_id']: row['player_nickname']
         for _, row in lineups.iterrows()
         if pd.notnull(row['player_nickname'])
     }
 
-    #Słownik player_name : nickname
     full_name_dict = {
         row['player_name']: row['player_nickname']
         for _, row in lineups.iterrows()
         if pd.notnull(row['player_nickname'])
     }
 
-    #Zamiana w składach
     lineups['player_name'] = lineups.apply(
         lambda row: row['player_nickname'] if pd.notnull(row['player_nickname']) else row['player_name'],
         axis=1
     )
 
-    #Zamiana w eventach
     if 'player' in events.columns:
         events['player'] = events.apply(
             lambda row: nickname_dict.get(row.get('player_id'), row.get('player'))
@@ -31,16 +30,15 @@ def apply_nicknames(events, lineups):
             axis=1
         )
 
-    #Zamiana w wyjściowych 11stkach
-    for idx in events[(events['type'] == 'Starting XI') & (events['tactics'].notnull())].index:
-        lineup = events.at[idx, 'tactics'].get('lineup', [])
-        for player in lineup:
-            player_id = player['player']['id']
-            nickname = nickname_dict.get(player_id)
-            if nickname:
-                player['player']['name'] = nickname
+    if starting_events is not None and 'tactics' in starting_events.columns:
+        for idx in starting_events[starting_events['tactics'].notnull()].index:
+            lineup = starting_events.at[idx, 'tactics'].get('lineup', [])
+            for player in lineup:
+                pid = player['player']['id']
+                nickname = nickname_dict.get(pid)
+                if nickname:
+                    player['player']['name'] = nickname
 
-    #Zamiana w kartkach
     for idx, row in lineups.iterrows():
         player_id = row['player_id']
         nickname = nickname_dict.get(player_id)
@@ -48,7 +46,6 @@ def apply_nicknames(events, lineups):
             for card in row['cards']:
                 card['player_name'] = nickname
 
-    #Zamiana w zmianach
     for idx in events[events['type'] == 'Substitution'].index:
         player_id = events.at[idx, 'player_id']
         sub_name = events.at[idx, 'substitution_replacement']
@@ -60,6 +57,7 @@ def apply_nicknames(events, lineups):
             events.at[idx, 'substitution_replacement'] = full_name_dict[sub_name]
 
     return events, lineups
+
 
 def get_coordinates():
     return {
