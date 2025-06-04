@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* === General Layout === */
+body {
+    background-color: #0a1128;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4, h5 {
+    color: #cce4ff;
+    text-align: center;
+}
+
+/* === Link Styling === */
+a {
+    color: #66b3ff;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+/* === Section Block Styling === */
+.section {
+    background-color: #16213e;
+    padding: 1rem 2rem;
+    margin: 1rem auto;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(255,255,255,0.05);
+}
+
+/* === DataTable Styling (Fix white background/text conflict) === */
+.dash-table-container .dash-spreadsheet-container {
+    background-color: #1b2430 !important;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Cell background and text */
+.dash-table-container .dash-spreadsheet-container .dash-cell {
+    background-color: #1b2430 !important;
+    color: #ffffff !important;
+}
+
+/* Header background and text */
+.dash-table-container .dash-spreadsheet-container .dash-header {
+    background-color: #223355 !important;
+    color: #ffffff !important;
+    font-weight: bold;
+}
+
+/* Remove borders for cleaner look */
+.dash-table-container .dash-spreadsheet-container .dash-cell,
+.dash-table-container .dash-spreadsheet-container .dash-header {
+    border: 1px solid #2c3e50 !important;
+}
+
+/* Center pitch panel */
+.center-panel {
+    background-color: #1f2a40;
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 1rem auto;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+}
+.dash-table-container {
+    font-family: 'Inter', 'Segoe UI', sans-serif !important;
+}
+
+/* --- Navbar Styling --- */
+.custom-navbar {
+    background-color: #101e38 !important;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+}
+
+.brand-title {
+    font-weight: 600;
+    color: #cce4ff !important;
+    font-size: 1.25rem;
+}
+
+.nav-link {
+    color: #ffffff !important;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: #66b3ff !important;
+    text-decoration: none;
+}
+
+.nav-dropdown .Select__control,
+.nav-dropdown .Select-control {
+    background-color: #1b2430;
+    color: white;
+    border: 1px solid #2c3e50;
+    font-family: 'Inter', sans-serif;
+}
+
+.nav-dropdown .Select__single-value {
+    color: #1b2430;
+}
+
+.nav-dropdown .Select__menu {
+    background-color: #1b2430;
+    color: white;
+}
+/* Dropdown control (input box) */
+.nav-dropdown .Select__control {
+    background-color: #1b2430 !important;
+    border-color: #2c3e50 !important;
+    color: white !important;
+}
+
+/* Text inside selected value */
+.nav-dropdown .Select__single-value {
+    color: white !important;
+}
+
+/* Dropdown menu panel */
+.nav-dropdown .Select__menu {
+    background-color: #1b2430 !important;
+    color: white !important;
+    border: 1px solid #2c3e50;
+}
+
+/* Options in dropdown */
+.nav-dropdown .Select__option {
+    background-color: #1b2430;
+    color: white;
+}
+
+.nav-dropdown .Select__option--is-focused {
+    background-color: #2c3e50 !important;
+}
+
+.nav-dropdown .Select__option--is-selected {
+    background-color: #3399ff !important;
+    color: white !important;
+}
+
+/* Placeholder text */
+.nav-dropdown .Select__placeholder {
+    color: #cccccc !important;
+}
+
+/* === Dark-Themed Dropdown Styling === */
+
+.dark-dropdown .Select__control,
+.dark-dropdown .Select-control {
+    background-color: #1c273a !important;
+    color: white !important;
+    border: 1px solid #2f3e54 !important;
+}
+
+.dark-dropdown .Select__single-value,
+.dark-dropdown .Select-value {
+    color: white !important;
+}
+
+.dark-dropdown .Select__menu,
+.dark-dropdown .Select-menu {
+    background-color: #1c273a !important;
+    color: white !important;
+}
+
+.dark-dropdown .Select__option {
+    background-color: #1c273a;
+    color: white;
+}
+
+.dark-dropdown .Select__option--is-focused {
+    background-color: #2f3e54 !important;
+}
+
+.dark-dropdown .Select__option--is-selected {
+    background-color: #3c5c88 !important;
+    color: white !important;
+}
+
+.dark-dropdown .Select__placeholder {
+    color: #cccccc !important;
+}
+
+.dark-dropdown .Select__indicator {
+    color: white;
+}
+
