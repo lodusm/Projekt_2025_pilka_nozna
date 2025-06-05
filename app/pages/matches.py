@@ -80,14 +80,14 @@ layout = html.Div([
                         'column_id': 'Home'
                     },
                     'width': '240px',
-                    'textAlign': 'left'
+                    'textAlign': 'right'
                 },
                 {
                     'if': {
                         'column_id': 'Away'
                     },
                     'width': '240px',
-                    'textAlign': 'right'
+                    'textAlign': 'left'
                 },
                 {
                     'if': {
@@ -122,7 +122,7 @@ layout = html.Div([
                 'backgroundColor': '#2a3b50'
             }],
             style_table={
-                'maxWidth': '700px',
+                'maxWidth': '900px',
                 'margin': '0 auto',
                 'border': 'none',
                 'overflowX': 'auto'
