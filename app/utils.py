@@ -96,6 +96,9 @@ def get_coordinates():
 
         'Left Wing': (50, 15),
         'Right Wing': (50, 65),
+        
+        'Left Wing Back': (26, 15),
+        'Right Wing Back': (26, 65),
 
         'Center Forward': (53, 40),
         'Striker': (55, 40),

@@ -54,7 +54,7 @@ def calculate_appearances(events, starting_events, player_id, position_counts):
     sub_appearances = len(events[(events['type'] == 'Substitution') & (events.get('substitution_replacement_id') == player_id)]) if 'substitution_replacement_id' in events.columns else 0
     return starting_appearances, sub_appearances
 
-def build_stats_table(player_events, events, minutes_played, player_id):
+def generate_stats_table(player_events, events, minutes_played, player_id):
     def count_event(df, event_type, condition=None):
         if 'type' not in df.columns:
             return 0
@@ -149,7 +149,7 @@ def calculate_minutes(events_df, starting_df, player_id):
     return minutes
 
 
-def build_combined_player_pitch_figure(player_events, shots, position_counts):
+def draw_map(player_events, shots, position_counts):
     import pandas as pd
     from scipy.ndimage import gaussian_filter
 
@@ -195,7 +195,7 @@ def build_combined_player_pitch_figure(player_events, shots, position_counts):
         shots['y'] = shots['location'].apply(lambda loc: 80 - loc[1])
 
         symbol_map = {'Goal': 'star', 'On Target': 'diamond', 'Off Target': 'circle'}
-        color_map = {'Goal': 'crimson', 'On Target': 'dodgerblue', 'Off Target': 'gray'}
+        color_map = {'Goal': 'red', 'On Target': 'blue', 'Off Target': 'gray'}
 
         for cat in shots['category'].unique():
             cat_data = shots[shots['category'] == cat]
@@ -272,10 +272,10 @@ def layout(player_id=None):
     minutes_played = calculate_minutes(events, starting_events, player_id)
     if events.empty or minutes_played == 0:
         return html.Div([
-            html.H2(f"{full_name} ({nickname})", style={"textAlign": "center", "marginBottom": "1rem"}),
+            html.H2(f"{nickname}", style={"textAlign": "center", "marginBottom": "1rem"}),
             html.P(f"Nationality: {country} | Jersey: {jersey} | Team: {team}", style={"textAlign": "center"}),
-            html.H4("No Data Available", style={"textAlign": "center", "marginTop": "2rem"}),
-            html.P(f"{nickname} has not played any minutes this season.", style={"textAlign": "center", "color": "#bbbbbb"})
+            html.H4("No Data", style={"textAlign": "center", "marginTop": "2rem"}),
+            html.P(f"{nickname} has not played his season.", style={"textAlign": "center", "color": "#bbbbbb"})
         ], style={"padding": "2rem"})
     events, lineups = utils.apply_nicknames(events, lineups, starting_events=starting_events)
  
@@ -286,7 +286,7 @@ def layout(player_id=None):
 
     player_events = extract_player_events(events, player_id)
     shots = player_events[player_events['type'] == 'Shot'].copy()
-    stats_table = build_stats_table(player_events, events, minutes_played, player_id)
+    stats_table = generate_stats_table(player_events, events, minutes_played, player_id)
     appearance_data = pd.DataFrame([{
         "Minutes Played": minutes_played,
         "Appearances": starting_appearances + sub_appearances,
@@ -368,7 +368,8 @@ html.Div([
     html.Div([
         html.H4("Mega Map", style={"textAlign": "center"}),
         dcc.Graph(
-            figure=build_combined_player_pitch_figure(player_events, shots, position_counts),
+            figure=draw_map
+        (player_events, shots, position_counts),
             config={"displayModeBar": False},
             style={"width": "100%", "maxWidth": "800px", "margin": "0 auto"}
         )
