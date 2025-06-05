@@ -10,42 +10,59 @@ client = MongoClient("mongodb://localhost:27017/")
 db = client["football_data"]
 matches = pd.DataFrame(list(db.matches.find()))
 
-matches["Score"] = matches.apply(lambda row: f"{row['home_score']} : {row['away_score']}", axis=1)
+matches["Score"] = matches.apply(
+    lambda row: f"{row['home_score']} : {row['away_score']}", axis=1)
 
-table_data_full = matches[["match_id", "match_week", "home_team", "Score", "away_team"]].rename(columns={
+table_data_full = matches[[
+    "match_id", "match_week", "home_team", "Score", "away_team"
+]].rename(columns={
     "home_team": "Home",
     "away_team": "Away"
 })
 
 layout = html.Div([
     html.H2("📅 Match List", style={"textAlign": "center"}),
-
     html.Div([
-        dcc.Dropdown(
-            id="matchweek-dropdown",
-            className="dark-dropdown",
-            options=[{"label": f"Week {i}", "value": i} for i in sorted(matches["match_week"].dropna().unique())],
-            placeholder="Select Matchweek",
-            value=1,
-            style={"width": "250px", "margin": "1rem auto"},
-            clearable=False
-        )
-    ], style={"textAlign": "center"}),
-
+        dcc.Dropdown(id="matchweek-dropdown",
+                     className="dark-dropdown",
+                     options=[{
+                         "label": f"Week {i}",
+                         "value": i
+                     } for i in sorted(matches["match_week"].dropna().unique())
+                              ],
+                     placeholder="Select Matchweek",
+                     value=1,
+                     style={
+                         "width": "250px",
+                         "margin": "1rem auto"
+                     },
+                     clearable=False)
+    ],
+             style={"textAlign": "center"}),
     dcc.Store(id='match-data'),
-
     html.Div([
         dash_table.DataTable(
             id='matches-table',
             columns=[
-                {'name': 'Home', 'id': 'Home'},
-                {'name': 'Score', 'id': 'Score'},
-                {'name': 'Away', 'id': 'Away'},
-                {'name': 'Match ID', 'id': 'match_id'},
+                {
+                    'name': 'Home',
+                    'id': 'Home'
+                },
+                {
+                    'name': 'Score',
+                    'id': 'Score'
+                },
+                {
+                    'name': 'Away',
+                    'id': 'Away'
+                },
+                {
+                    'name': 'Match ID',
+                    'id': 'match_id'
+                },
             ],
             page_action='none',
             style_as_list_view=True,
-
             style_cell={
                 'backgroundColor': '#1c273a',
                 'color': '#f0f0f0',
@@ -57,14 +74,35 @@ layout = html.Div([
                 'whiteSpace': 'normal',
                 'height': 'auto',
             },
-
             style_cell_conditional=[
-                {'if': {'column_id': 'Home'}, 'width': '240px', 'textAlign': 'left'},
-                {'if': {'column_id': 'Away'}, 'width': '240px', 'textAlign': 'right'},
-                {'if': {'column_id': 'Score'}, 'width': '80px', 'textAlign': 'center'},
-                {'if': {'column_id': 'match_id'}, 'display': 'none'},
+                {
+                    'if': {
+                        'column_id': 'Home'
+                    },
+                    'width': '240px',
+                    'textAlign': 'left'
+                },
+                {
+                    'if': {
+                        'column_id': 'Away'
+                    },
+                    'width': '240px',
+                    'textAlign': 'right'
+                },
+                {
+                    'if': {
+                        'column_id': 'Score'
+                    },
+                    'width': '80px',
+                    'textAlign': 'center'
+                },
+                {
+                    'if': {
+                        'column_id': 'match_id'
+                    },
+                    'display': 'none'
+                },
             ],
-
             style_header={
                 'backgroundColor': '#324863',
                 'color': '#ffffff',
@@ -72,30 +110,32 @@ layout = html.Div([
                 'fontSize': '15px',
                 'borderBottom': '2px solid #50657a'
             },
-
-            style_data_conditional=[
-                {'if': {'row_index': 'odd'}, 'backgroundColor': '#1e2a3e'},
-                {'if': {'state': 'active'}, 'backgroundColor': '#2a3b50'}
-            ],
-
+            style_data_conditional=[{
+                'if': {
+                    'row_index': 'odd'
+                },
+                'backgroundColor': '#1e2a3e'
+            }, {
+                'if': {
+                    'state': 'active'
+                },
+                'backgroundColor': '#2a3b50'
+            }],
             style_table={
                 'maxWidth': '700px',
                 'margin': '0 auto',
                 'border': 'none',
                 'overflowX': 'auto'
-            }
-        )
+            })
     ]),
-
     dcc.Location(id='matches-url', refresh=True)
-], className='container')
+],
+                  className='container')
+
 
 #do aktualizacji po rundzie
-@callback(
-    Output('matches-table', 'data'),
-    Output('match-data', 'data'),
-    Input('matchweek-dropdown', 'value')
-)
+@callback(Output('matches-table', 'data'), Output('match-data', 'data'),
+          Input('matchweek-dropdown', 'value'))
 def update_table(matchweek):
     if matchweek is None:
         return [], []
@@ -103,12 +143,10 @@ def update_table(matchweek):
     data = filtered.to_dict("records")
     return data, data
 
+
 #idź do meczu albo drużyny
-@callback(
-    Output('matches-url', 'pathname'),
-    Input('matches-table', 'active_cell'),
-    Input('match-data', 'data')
-)
+@callback(Output('matches-url', 'pathname'),
+          Input('matches-table', 'active_cell'), Input('match-data', 'data'))
 def row_click_navigation(active_cell, data):
     ids = internal_team_id()
     if active_cell and data:
